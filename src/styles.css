@@ -8,212 +8,71 @@ html {
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-main {
+.loading-screen {
   display: flex;
-  flex-direction: column;
-  height: 100vh;
-  align-items: center;
-  justify-content: space-around;
-}
-
-#board {
-  width: 90vw;
-  max-width: min(90vh, 600px);
-  aspect-ratio: 1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-@keyframes right {
-  0%,
-  100% {
-    transform: translate(-20px);
-  }
-  50% {
-    transform: translate(20px);
-  }
-}
-
-@keyframes left {
-  0%,
-  100% {
-    transform: translate(20px);
-  }
-  50% {
-    transform: translate(-20px);
-  }
-}
-
-button {
-  position: relative;
-  background: transparent;
-  border: 1.3vw solid #e6e6e620;
-  border-left: 0;
-  border-top: 0;
-  width: 100%;
-  aspect-ratio: 1;
-  padding: 0;
-  margin: 0;
-}
-
-button:before {
-  position: absolute;
-  top: max(8%, 8px);
-  left: max(8%, 8px);
-  bottom: max(8%, 8px);
-  right: max(8%, 8px);
-  content: "";
-  display: block;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  transition: opacity 1s ease-out;
-}
-
-button[data-dim="true"]:before {
-  opacity: 0.2;
-  scale: 0.8;
-}
-
-@keyframes scale-in {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-button[data-player="0"]:before {
-  background-image: url(./assets/x.svg);
-  animation: scale-in 0.2s ease-in-out;
-}
-
-button[data-player="1"]:before {
-  background-image: url(./assets/o.svg);
-  animation: scale-in 0.2s ease-in-out;
-}
-
-button:nth-child(3n) {
-  border-right: 0;
-}
-
-button:nth-child(7),
-button:nth-child(8),
-button:nth-child(9) {
-  border-bottom: 0;
-}
-
-button:not([data-disabled]) {
-  cursor: pointer;
-}
-
-@keyframes tap-to-play {
-  0% {
-    transform: scale(0.7);
-  }
-  50% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0.7);
-  }
-}
-
-#board.initial button:nth-child(5)::before {
-  opacity: 1;
-  content: "tap to play";
-  display: flex;
-  align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-
-  text-align: center;
-  font-size: 8vw;
-  font-weight: 700;
-  line-height: 11vw;
-  letter-spacing: 0vw;
-
-  background: linear-gradient(90deg, #cb89fc 0.24%, #fea9ab 96.17%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-
-  animation: tap-to-play 1.5s ease-in-out infinite;
+  align-items: center;
+  height: 100vh;
+  font-size: 24px;
+  color: white;
 }
 
-@media (hover: hover) {
-  button:not([data-disabled]):after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -10%;
-    margin-left: -10%;
-    width: 20%;
-    border-radius: 50%;
-    background: #e6e6e6;
-    aspect-ratio: 1;
-    transition: all 0.15s ease-in-out;
-    scale: 0;
-  }
-
-  button:hover:after {
-    scale: 1;
-  }
-}
-
-ul {
-  list-style: none;
-  font-size: min(14px, 3vw);
-  padding: 0;
-  font-weight: bold;
-  display: flex;
-  width: 100%;
-  justify-content: space-around;
-}
-
-li {
-  opacity: 0.5;
-  line-height: 1.7;
+.game-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  transition: opacity 0.2s ease-in-out;
-  text-align: center;
+  height: 100vh;
+  margin: 0 auto;
+  background-color: #000;
+  color: #fff;
 }
 
-li img {
-  width: 20vw;
-  height: 20vw;
-  margin-top: 6.4vw;
-  margin-bottom: 2.1vw;
+.road {
+  position: relative;
+  width: 98vw;
+  height: 100%;
+  background-color: gray;
+  overflow: hidden;
+  border: 2px solid white;
 }
 
-li[data-your-turn="true"] {
-  opacity: 1;
+.car {
+  width: 40px;
+  height: 70px;
+  background-color: red;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: left 0.1s; /* Smooth transition for car movement */
+  z-index: 10;
 }
 
-li:before {
-  content: "";
-  display: inline-block;
-  vertical-align: middle;
-  width: 13vw;
-  height: 13vw;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+.obstacle {
+  width: 40px; /* Same size as player's car */
+  height: 70px;
+  background-color: blue; /* Different color to represent other cars or obstacles */
+  position: absolute;
+  transition: top 0.1s linear; /* Smooth transition for downward movement */
 }
 
-li[data-player="0"]:before {
-  background-image: url(./assets/x.svg);
+.road-segment {
+  position: absolute;
+  width: 4px; 
+  height: 40px; 
+  background-color: white;
+  left: 50%; 
+  transform: translateX(-50%);
+  animation: moveRoad 1s linear infinite;
 }
 
-li[data-player="1"]:before {
-  background-image: url(./assets/o.svg);
+/* Road movement to simulate driving */
+@keyframes moveRoad {
+  from {
+    top: -40px; /* Start above the view */
+  }
+  to {
+    top: 100vh; /* Move down the entire viewport */
+  }
 }
